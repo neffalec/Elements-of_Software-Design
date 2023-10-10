@@ -35,13 +35,67 @@ class Node():
             aNode.postOrder(aNode.lChild)
             aNode.postOrder(aNode.rChild)
             print(aNode.data, end=" ")
-
+            
+    def bst_size(self, node):
+        if node == None:
+            return 0
+        else:
+            return 1 + self.bst_size(node.rChild) + self.bst_size(node.lChild)
 
 class BST():
     '''This class represents a Binary Search Tree.'''
 
     def __init__(self):
         self.root = None
+
+    def sort(self):
+        sorted_list = []
+        self.in_order_traversal(self.root, sorted_list)
+        return sorted_list
+    
+    def in_order_traversal(self, node, sorted_list):
+        if node:
+            self.in_order_traversal(node.lChild,sorted_list)
+            sorted_list.append(node.data)
+            self.in_order_traversal(node.rChild,sorted_list)
+
+    def bst_median(self):
+        median = None
+        sorted_elements = self.sort()
+        length = len(sorted_elements)
+        if length % 2 == 0:
+            med1 = sorted_elements[length//2 + 1]
+            med2 = sorted_elements[length//2 - 1]
+            median = (med1 + med2) // 2
+        else:
+            median_index = length // 2
+            median = sorted_elements[median_index]
+        return median
+
+    def height(self) -> int:
+        return self.calc_height(self.root)
+
+    def calc_height(self, node):
+        if node == None:
+            return 0
+        else:
+            l_height = self.calc_height(node.lChild)
+            r_height = self.calc_height(node.rChild)
+            return 1 + max(l_height, r_height)
+
+    def is_balanced(self):
+        return self.balanced(self.root)
+
+    def balanced(self, node):
+        if node == None:
+            return False
+        else:
+            l_height = self.calc_height(node.lChild)
+            r_height = self.calc_height(node.rChild)
+            if l_height == r_height:
+                return True
+            else:
+                return False
 
     def print(self, level):
         self.root.print_node(level)
@@ -194,9 +248,12 @@ def main():
     bst.insert(22)
     bst.insert(4)
 
+    sorted_elements = bst.sort()
+    bst.bst_median()
+    print("sorted elements of the BST:", sorted_elements)
+
     bst.print(2)
     print("##############")
-    bst.delete(10)
     bst.print(2)
     print("##############")
 
@@ -210,6 +267,29 @@ def main():
     print()
     print("Print Post-Order")
     bst.root.postOrder(bst.root)
+    
+    print()
+    size = bst.root.bst_size(bst.root)
+    print('Size of the BST:', size)
+    
+    print()
+    sorted_elements = bst.sort()
+    print('Sorted elements of the BST:', sorted_elements)
+    
+    print()
+    median = bst.bst_median()
+    print('The median is:', median)
+    
+    print()
+    height = bst.height()
+    print('Height of the BST:', height)
+    
+    print()
+    is_balanced = bst.is_balanced()
+    if is_balanced:
+        print('The BST is balanced.')
+    else:
+        print('The BST is not balanced.')
 
 if __name__ == '__main__':
     main()
